@@ -19,4 +19,5 @@ Route::prefix('auth')->controller(SocialAuthController::class)->group(function (
 });
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('register', 'register')->name('register');
+    Route::post('login', 'login')->name('login');
 });
