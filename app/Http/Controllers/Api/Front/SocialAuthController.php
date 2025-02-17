@@ -48,6 +48,7 @@ class SocialAuthController extends Controller
             }
 
             $token = $findUser->createToken('API Token')->plainTextToken;
+
             return response()->json(['user' => $findUser, 'token' => $token]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Authentication failed', 'message' => $e->getMessage()], 500);
