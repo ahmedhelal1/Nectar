@@ -61,4 +61,8 @@ class User extends Authenticatable implements HasMedia
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function addresses()
+    {
+        return $this->hasMany(Addresses::class, 'user_id');
+    }
 }
