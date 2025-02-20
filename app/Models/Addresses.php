@@ -10,14 +10,14 @@ class Addresses extends Model
     use HasFactory;
     public function cities()
     {
-        return $this->hasMany(Cities::class, 'city_id');
+        return $this->belongsTo(Cities::class, 'city_id');
     }
     public function governorates()
     {
-        return $this->hasMany(Governorates::class, 'governorate_id');
+        return $this->belongsTo(Governorates::class, 'governorate_id');
     }
-    public function users()
-    {
-        return $this->hasMany(User::class, 'user_id');
-    }
+    // public function users()
+    // {
+    //     return $this->belongsTo(User::class, 'user_id');
+    // }
 }

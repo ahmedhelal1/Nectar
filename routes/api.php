@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Front\AddressController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
@@ -22,3 +23,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('login', 'login')->name('login');
     Route::post('/logout', 'logout')->name('logout')->middleware('auth:sanctum');
 });
+
+Route::get('getGovernorates', [AddressController::class, 'getGovernorates']);
+Route::get('getCities', [AddressController::class, 'getCities']);
+Route::get('getAddress', [AddressController::class, 'getAddress']);
