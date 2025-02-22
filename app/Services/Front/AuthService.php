@@ -35,33 +35,28 @@ class AuthService
             'expires_at' => Carbon::now()->addMinute()
         ]);
         return $user;
-        // $token = $user->createToken('auth_token')->plainTextToken;
-
     }
     public function login(array $data)
     {
 
-        $user = User::where('email', $data['email'])->first();
+        $user = User::where('email', $data['email'])->where('is_first_login', 1)->first();
         if (!$user || !Hash::check($data['password'], $user['password'])) {
 
-            return response()->json(['error' => 'Invalid email or password'], 401);
+            return response()->json(['error' => 'Invalid email or password '], 401);
         }
-
+        if ($user->is_first_login == 0) {
+            return response()->json(['error' => 'You need to complete the first login process'], 403);
+        }
         if (Auth::attempt(['email' => $user['email'], 'password' => $data['password']])) {
             $token = $user->createToken('auth_token')->plainTextToken;
-            return response()->json([
-                'message' => 'Login successful',
-                'user' => $user,
-                'token' => $token
-            ], 200);
         } else {
             return response()->json(['error' => 'wrong_credentials'], 401);
         }
+        return ['user' => $user, 'token' => $token];
     }
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => "logout success"], 200);
     }
     public function sendOtpCode(array $data)
     {
@@ -78,6 +73,7 @@ class AuthService
             'is_used' => 0,
             'expires_at' => Carbon::now()->addMinute()
         ]);
+        return $otp;
     }
     public function verifyOtpCode(array $data)
     {
@@ -85,7 +81,7 @@ class AuthService
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-        $otpCode = OtpCode::where('user_id', $user->id)->where('code', $data['code'])->first();
+        $otpCode = OtpCode::where('user_id', $user->id)->where('code', $data['code'])->latest()->first();
 
         if (!$otpCode) {
             return response()->json(['error' => 'Invalid OTP code'], 400);
@@ -101,5 +97,11 @@ class AuthService
         }
         $otpCode->is_used = 1;
         $otpCode->save();
+        $user->is_email_verified = 1;
+        $user->email_verified_at = now();
+        $user->is_first_login = 1;
+        $user->save();
+        $token = $user->createToken('auth_token')->plainTextToken;
+        return  $token;
     }
 }

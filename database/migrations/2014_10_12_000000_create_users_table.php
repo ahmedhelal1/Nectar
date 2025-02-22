@@ -20,16 +20,11 @@ return new class extends Migration
             $table->string('password');
             $table->tinyInteger('account_type');
             $table->enum('language', ['ar', 'en']);
+            $table->boolean('is_first_login')->default(0);
 
 
             /////////////////////////////////////////////////////////////////
-            // $table->string('address')->nullable();
-            // $table->boolean('is_first_login')->default(0);
-            // $table->string('phone')->unique()->nullable();
-            // $table->tinyInteger('account_type');
-            // $table->text('bio')->nullable();
-            // $table->boolean('active_notification')->default(1);
-            // $table->index(['name', 'email', 'phone']);
+
             $table->string('social_id')->nullable();
             $table->string('social_type')->nullable();
             $table->rememberToken();

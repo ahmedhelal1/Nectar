@@ -22,18 +22,20 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $data = $request->validated();
-        return $this->authService->login($data);
+        $user = $this->authService->login($data);
+        return $this->responseApi("Login is successful", $user);
     }
     public function logout(Request $request)
     {
-        return $this->authService->logout($request);
+        $data = $this->authService->logout($request);
+        return $this->responseApi("logout is successful");
     }
     public function sendOtpCode(SendCodeRequest $request)
     {
         try {
             $data = $request->validated();
-            $this->authService->sendOtpCode($data);
-            return $this->responseApi("Enter Code");
+            $otp = $this->authService->sendOtpCode($data);
+            return $this->responseApi(" OTP sent successfully", $otp);
         } catch (\Exception $e) {
             return $this->responseApi($e->getMessage());
         }
@@ -43,8 +45,8 @@ class AuthController extends Controller
     {
         try {
             $data = $request->validated();
-            $this->authService->verifyOtpCode($data);
-            return $this->responseApi("Code verified successfully");
+            $user = $this->authService->verifyOtpCode($data);
+            return $this->responseApi("OTP code verified successfully", $user);
         } catch (\Exception $e) {
             return $this->responseApi($e->getMessage());
         }
