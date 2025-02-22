@@ -16,8 +16,4 @@ class Addresses extends Model
     {
         return $this->belongsTo(Governorates::class, 'governorate_id');
     }
-    // public function users()
-    // {
-    //     return $this->belongsTo(User::class, 'user_id');
-    // }
 }

@@ -10,8 +10,8 @@ class AddressTransformer extends TransformerAbstract
     public function transform(Addresses $address)
     {
         return [
-            'governorate_id' => $address->governorate_id,
-            'city_id' => $address->city_id,
+            'governorate' => $address->governorates->name,
+            'city' => $address->cities->name,
         ];
     }
 }

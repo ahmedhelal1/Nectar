@@ -3,10 +3,12 @@
 namespace App\Http\Requests\Api\Front\User;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class RegisterRequest extends FormRequest
+class VerifyCodeRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return true;
@@ -20,15 +22,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'bail|required|string|min:2|max:50',
-            'email' => [
-                'bail',
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('users')->whereNull('deleted_at'),
-            ],
-            'password' => 'required|min:8|max:150|confirmed',
+            'email' => 'required|email|max: 255|exists:users,email',
+            'code' => 'required|digits:4|integer'
         ];
     }
 }

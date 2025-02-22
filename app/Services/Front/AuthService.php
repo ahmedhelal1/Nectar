@@ -5,13 +5,12 @@ namespace App\Services\Front;
 use App\Models\{OtpCode, User};
 use Carbon\Carbon;
 use Doctrine\Common\Lexer\Token;
+use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-
-
-
+use Illuminate\Validation\ValidationData;
 
 class AuthService
 {
@@ -21,12 +20,11 @@ class AuthService
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
-            'address' => $data['address'],
             'account_type' => User::CLIENT,
             'language' => request()?->header('X-Language') ?? 'en'
         ]);
+
         $otp = OtpCode::generateCode();
         $otpCode = OtpCode::create([
             'code' => $otp,
@@ -36,14 +34,9 @@ class AuthService
             'is_used' => 0,
             'expires_at' => Carbon::now()->addMinute()
         ]);
-        $token = $user->createToken('auth_token')->plainTextToken;
+        return $user;
+        // $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json([
-            'message' => 'Successfully registered, please verify your email.',
-            'user' => $user,
-            'token' => $token
-
-        ], 200);
     }
     public function login(array $data)
     {
@@ -69,5 +62,44 @@ class AuthService
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => "logout success"], 200);
+    }
+    public function sendOtpCode(array $data)
+    {
+        $user = User::where('email', $data['email'])->first();
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        $otp = OtpCode::generateCode();
+        $otpCode = OtpCode::create([
+            'code' => $otp,
+            'type' => 'email',
+            'user_id' => $user->id,
+            'usage' => 'verify',
+            'is_used' => 0,
+            'expires_at' => Carbon::now()->addMinute()
+        ]);
+    }
+    public function verifyOtpCode(array $data)
+    {
+        $user = User::where('email', $data['email'])->first();
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        $otpCode = OtpCode::where('user_id', $user->id)->where('code', $data['code'])->first();
+
+        if (!$otpCode) {
+            return response()->json(['error' => 'Invalid OTP code'], 400);
+        }
+        if ($otpCode->usage != 'verify') {
+            return response()->json(['error' => 'OTP code not meant for this purpose'], 400);
+        }
+        if (Carbon::parse($otpCode->expires_at)->isPast()) {
+            return response()->json(['error' => 'OTP code expired'], 400);
+        }
+        if ($otpCode->is_used) {
+            return response()->json(['error' => 'OTP code already used'], 400);
+        }
+        $otpCode->is_used = 1;
+        $otpCode->save();
     }
 }
