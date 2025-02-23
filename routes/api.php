@@ -35,3 +35,4 @@ Route::get('getCities', [AddressController::class, 'getCities']);
 Route::get('getAddress', [AddressController::class, 'getAddress']);
 
 Route::get('getCategory', [CategoryController::class, 'index']);
+Route::get('getProduct', [ProductController::class, 'index']);
