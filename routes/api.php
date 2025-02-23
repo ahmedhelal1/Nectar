@@ -1,12 +1,16 @@
 <?php
 
-use App\Http\Controllers\Api\Front\AddressController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use PHPUnit\TextUI\Configuration\GroupCollection;
-use App\Http\Controllers\Api\Front\AuthController;
-use App\Http\Controllers\Api\Front\SocialAuthController;
+use App\Http\Controllers\Api\Front\{
+    AuthController,
+    SocialAuthController,
+    AddressController,
+    CategoryController,
+    ProductController
+};
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -29,3 +33,5 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 Route::get('getGovernorates', [AddressController::class, 'getGovernorates']);
 Route::get('getCities', [AddressController::class, 'getCities']);
 Route::get('getAddress', [AddressController::class, 'getAddress']);
+
+Route::get('getCategory', [CategoryController::class, 'index']);
