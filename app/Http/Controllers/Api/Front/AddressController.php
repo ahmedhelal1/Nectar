@@ -30,7 +30,8 @@ class AddressController extends Controller
 
     public function getAddress(Request $request)
     {
-        $userId = $request->input('filter.user_id');
+
+        $userId = auth()->id();
         $address = $this->address_service->getAddressesByUserId($userId)->load(['governorates', 'cities']);
         $address =  Fractal()
             ->collection($address)

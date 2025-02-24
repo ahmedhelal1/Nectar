@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Products extends Model
+class Products extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
     protected $fillable = [
         'name',
-        'image',
         'description',
         'price',
         'quantity',
@@ -20,5 +21,9 @@ class Products extends Model
     public function categories()
     {
         return $this->belongsTo(Categories::class, "category_id");
+    }
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('products')->useDisk('public');
     }
 }

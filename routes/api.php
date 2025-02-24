@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 use PHPUnit\TextUI\Configuration\GroupCollection;
 use App\Http\Controllers\Api\Front\{
     AuthController,
@@ -22,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     Route::get('facebook', 'redirectToFacebook')->name('social.facebook.redirect');
 //     Route::get('facebook/callback', 'handleFacebookCallback')->name('social.facebook.callback');
 // });
+
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('register', 'register')->name('register');
     Route::post('login', 'login')->name('login');
@@ -32,10 +34,14 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('resetPassword', 'resetPassword')->name('resetPassword');
 });
 
-Route::get('getGovernorates', [AddressController::class, 'getGovernorates']);
-Route::get('getCities', [AddressController::class, 'getCities']);
-Route::get('getAddress', [AddressController::class, 'getAddress']);
-Route::Post('createAddress', [AddressController::class, 'store']);
-
+Route::prefix('address')->controller(AddressController::class)->group(
+    function () {
+        Route::get('getGovernorates', 'getGovernorates');
+        Route::get('getCities', 'getCities');
+        Route::get('getAddress', 'getAddress')->middleware('auth:sanctum');
+        Route::Post('createAddress', 'store')->middleware('auth:sanctum');
+    }
+);
 Route::get('getCategory', [CategoryController::class, 'index']);
 Route::get('getProduct', [ProductController::class, 'index']);
+Route::post('createProduct', [ProductController::class, 'store'])->middleware('auth:sanctum');;
