@@ -19,7 +19,8 @@ class OtpCode extends Model
         'code',
         'type',
         'usage',
-        'expires_at'
+        'expires_at',
+        'is_used'
     ];
 
     public function user(): BelongsTo

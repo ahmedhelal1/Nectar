@@ -69,7 +69,7 @@ class AuthService
             'code' => $otp,
             'type' => 'email',
             'user_id' => $user->id,
-            'usage' => 'verify',
+            'usage' => $data['usage'],
             'is_used' => 0,
             'expires_at' => Carbon::now()->addMinute()
         ]);
@@ -105,7 +105,7 @@ class AuthService
         return  $token;
     }
 
-    public function forgotPassword(array $data)
+    public function forgetPassword(array $data)
     {
         $user = User::where('email', $data['email'])->first();
         if (!$user) {
@@ -121,5 +121,35 @@ class AuthService
             'expires_at' => Carbon::now()->addMinute()
         ]);
         return $otp;
+    }
+    public function resetPassword(array $data)
+    {
+
+        $user = User::where('email', $data['email'])->first();
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        $otpCode = OtpCode::where('user_id', $user->id)->where('code', $data['code'])->latest()->first();
+
+        if (!$otpCode) {
+            return response()->json(['error' => 'Invalid OTP code'], 400);
+        }
+
+        if ($otpCode->is_used == 1) {
+            return response()->json(['error' => 'OTP code already used'], 400);
+        }
+
+
+        if ($otpCode->usage != 'forget_password') {
+            return response()->json(['error' => 'OTP code not meant for this purpose'], 400);
+        }
+
+        if (Carbon::parse($otpCode->expires_at)->isPast()) {
+            return response()->json(['error' => 'OTP code expired'], 400);
+        }
+        $otpCode->is_used = 1;
+        $otpCode->save();
+        $user->password = Hash::make($data['new_password']);
+        $user->save();
     }
 }

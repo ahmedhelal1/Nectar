@@ -28,6 +28,8 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout')->middleware('auth:sanctum');
     Route::Post('sendCode', 'sendOtpCode')->name('sendCode');
     Route::Post('verify', 'verifyOtpCode')->name('verify');
+    Route::post('forgetPassword', 'forgetPassword')->name('forgetPassword');
+    Route::post('resetPassword', 'resetPassword')->name('resetPassword');
 });
 
 Route::get('getGovernorates', [AddressController::class, 'getGovernorates']);

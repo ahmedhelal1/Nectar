@@ -23,9 +23,6 @@ class ForgetPasswordRequest extends FormRequest
     {
         return [
             'email' => 'bail|required|email|exists:users,email',
-            'current_password' => 'bail|required|current_password|min:8|max:150',
-            'new_password' => 'bail|required|min:8|max:150|confirmed|different:current_password',
-
         ];
     }
 }

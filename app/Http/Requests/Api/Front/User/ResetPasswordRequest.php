@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\Front\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SendCodeRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,10 @@ class SendCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-
-            'email' => 'required|email|max: 255|exists:users,email',
-            'usage' => 'required|in:verify,forget_password',
+            'email' => 'bail|required|email|exists:users,email',
+            'new_password' => 'bail|required|min:8|max:150|confirmed|different:current_password',
+            'new_password_confirmation' => 'sometimes|same:new_password',
+            'code' => 'required|digits:4'
         ];
     }
 }
