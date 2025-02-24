@@ -33,6 +33,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 Route::get('getGovernorates', [AddressController::class, 'getGovernorates']);
 Route::get('getCities', [AddressController::class, 'getCities']);
 Route::get('getAddress', [AddressController::class, 'getAddress']);
+Route::Post('createAddress', [AddressController::class, 'store']);
 
 Route::get('getCategory', [CategoryController::class, 'index']);
 Route::get('getProduct', [ProductController::class, 'index']);

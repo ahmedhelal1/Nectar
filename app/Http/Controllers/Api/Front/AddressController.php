@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\Front\AddressService;
 use League\Fractal\Resource\Collection;
 use App\Transformers\Api\Front\Address\{AddressTransformer, CityTransformer, GovernmentTransformer};
+use App\Http\Requests\Api\Front\Address\CreateAddressRequest;
 
 class AddressController extends Controller
 {
@@ -37,5 +38,12 @@ class AddressController extends Controller
             ->toArray();
 
         return $this->responseApi('Get address success', $address, 200);
+    }
+
+    public function store(CreateAddressRequest $request)
+    {
+        $data = $request->validated();
+        $address = $this->address_service->createAddress($data);
+        return $this->responseApi('Address created successfully', $address, 201);
     }
 }

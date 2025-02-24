@@ -104,4 +104,22 @@ class AuthService
         $token = $user->createToken('auth_token')->plainTextToken;
         return  $token;
     }
+
+    public function forgotPassword(array $data)
+    {
+        $user = User::where('email', $data['email'])->first();
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        $otp = OtpCode::generateCode();
+        $otpCode = OtpCode::create([
+            'code' => $otp,
+            'type' => 'email',
+            'user_id' => $user->id,
+            'usage' => 'forget_password',
+            'is_used' => 0,
+            'expires_at' => Carbon::now()->addMinute()
+        ]);
+        return $otp;
+    }
 }

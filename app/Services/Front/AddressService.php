@@ -17,11 +17,14 @@ class AddressService
         return $cities;
     }
 
-
-
     public function getAddressesByUserId($userId)
     {
         $cities = Addresses::where('user_id', $userId)->get();
         return $cities;
+    }
+    public function createAddress($data)
+    {
+        $address = Addresses::create($data);
+        return $address;
     }
 }
