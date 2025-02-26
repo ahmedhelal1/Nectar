@@ -9,7 +9,7 @@ use Illuminate\Http\UploadedFile;
 
 class ProductService
 {
-    public function getProduct($category_id)
+    public function index($category_id)
     {
         $product = Products::where('category_id', $category_id)->get();
         return $product;
@@ -27,10 +27,15 @@ class ProductService
             $product->addMedia($data['image'])->toMediaCollection('images');
         }
         $product->save();
+        return $product;
+    }
+    public function getProduct($id)
+    {
+        $product = Products::find($id);
 
-
-
-
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
         return $product;
     }
 }

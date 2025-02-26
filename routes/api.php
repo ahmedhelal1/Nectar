@@ -43,5 +43,6 @@ Route::prefix('address')->controller(AddressController::class)->group(
     }
 );
 Route::get('getCategory', [CategoryController::class, 'index']);
-Route::get('getProduct', [ProductController::class, 'index']);
+Route::get('indexProduct', [ProductController::class, 'index']);
+Route::get('getProduct/{id}', [ProductController::class, 'getProduct']);
 Route::post('createProduct', [ProductController::class, 'store'])->middleware('auth:sanctum');;
