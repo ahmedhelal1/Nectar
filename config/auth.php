@@ -13,14 +13,14 @@ return [
     |
     */
 
-    // 'defaults' => [
-    //     'guard' => 'web',
-    //     'passwords' => 'users',
-    // ],
     'defaults' => [
-        'guard' => 'sanctum',
+        'guard' => 'web',
         'passwords' => 'users',
     ],
+    // 'defaults' => [
+    //     'guard' => 'sanctum',
+    //     'passwords' => 'users',
+    // ],
 
     /*
     |--------------------------------------------------------------------------

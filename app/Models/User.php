@@ -15,7 +15,6 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
-
 class User extends Authenticatable implements HasMedia
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, InteractsWithMedia;
@@ -65,5 +64,9 @@ class User extends Authenticatable implements HasMedia
     public function addresses()
     {
         return $this->hasMany(Addresses::class, 'user_id');
+    }
+    public function card()
+    {
+        return $this->hasMany(Cart::class);
     }
 }

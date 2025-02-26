@@ -26,4 +26,8 @@ class Products extends Model implements HasMedia
     {
         $this->addMediaCollection('products')->useDisk('public');
     }
+    public function cart()
+    {
+        return $this->hasMany(cart::class);
+    }
 }

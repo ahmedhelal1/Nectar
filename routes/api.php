@@ -10,7 +10,8 @@ use App\Http\Controllers\Api\Front\{
     SocialAuthController,
     AddressController,
     CategoryController,
-    ProductController
+    ProductController,
+    CartController
 };
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -46,3 +47,13 @@ Route::get('getCategory', [CategoryController::class, 'index']);
 Route::get('indexProduct', [ProductController::class, 'index']);
 Route::get('getProduct/{id}', [ProductController::class, 'getProduct']);
 Route::post('createProduct', [ProductController::class, 'store'])->middleware('auth:sanctum');;
+Route::prefix('cart')->middleware('auth:sanctum')->controller(CartController::class)->group(
+    function () {
+        Route::get('getCart', 'getCart')->name('getCart');
+        // Route::post('addToCart', 'addToCart');
+        // Route::post('updateCart', 'updateCart');
+        // Route::delete('removeFromCart/{id}', 'removeFromCart');
+        // Route::post('applyCoupon', 'applyCoupon');
+        // Route::post('checkout', 'checkout');
+    }
+);
