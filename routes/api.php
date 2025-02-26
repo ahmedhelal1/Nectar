@@ -50,7 +50,7 @@ Route::post('createProduct', [ProductController::class, 'store'])->middleware('a
 Route::prefix('cart')->middleware('auth:sanctum')->controller(CartController::class)->group(
     function () {
         Route::get('getCart', 'getCart')->name('getCart');
-        // Route::post('addToCart', 'addToCart');
+        Route::post('addToCart', 'addToCart')->name('addToCart');
         // Route::post('updateCart', 'updateCart');
         // Route::delete('removeFromCart/{id}', 'removeFromCart');
         // Route::post('applyCoupon', 'applyCoupon');

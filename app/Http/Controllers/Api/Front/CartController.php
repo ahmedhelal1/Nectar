@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Front\CartService;
 use App\Transformers\Api\Front\Cart\CartTransformer;
 use League\Fractal\Resource\Collection;
+use App\Http\Requests\Api\Front\Cart\AddToCartRequest;
 
 class CartController extends Controller
 {
@@ -18,5 +19,13 @@ class CartController extends Controller
         $cart = $this->cartService->getCart($user);
         $data = fractal()->collection($cart)->transformWith(new CartTransformer)->toArray();
         return $this->responseApi($data);
+    }
+    public function addToCart(AddToCartRequest $request)
+    {
+        $product_id = $request->product_id;
+        $user = Auth::user()->id;
+        $cart = $this->cartService->addToCart($product_id, $user);
+        $data = fractal()->item($cart)->transformWith(new CartTransformer)->toArray();
+        return $this->responseApi('Product added to cart successfully', $data, 201);
     }
 }
