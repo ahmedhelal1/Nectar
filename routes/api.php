@@ -52,8 +52,8 @@ Route::prefix('cart')->middleware('auth:sanctum')->controller(CartController::cl
         Route::get('getCart', 'getCart')->name('getCart');
         Route::post('addToCart', 'addToCart')->name('addToCart');
         Route::delete('removeFromCart', 'removeFromCart')->name('removeFromCart');
+        Route::post('updateCart', 'updateCartQuantity')->name('updateCart');
 
-        // Route::post('updateCart', 'updateCart');
         // Route::post('applyCoupon', 'applyCoupon');
         // Route::post('checkout', 'checkout');
     }

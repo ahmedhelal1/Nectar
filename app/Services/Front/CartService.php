@@ -28,4 +28,19 @@ class CartService
         }
         return false;
     }
+    public function updateCartQuantity($data)
+    {
+        $id = $data->cart_id;
+        $action = $data->action;
+        $row = Cart::find($id);
+        if (!$row) {
+            return response()->json(['error' => 'Cart item not found'], 404);
+        }
+        if ($action == "increase") {
+            $row->quantity++;
+        } elseif ($action == "decrease" && $row->quantity != 1) {
+            $row->quantity--;
+        }
+        $row->save();
+    }
 }

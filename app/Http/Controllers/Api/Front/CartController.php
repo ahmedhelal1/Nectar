@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Front\CartService;
 use App\Transformers\Api\Front\Cart\CartTransformer;
 use League\Fractal\Resource\Collection;
-use App\Http\Requests\Api\Front\Cart\{AddToCartRequest, RemoveFromCartRequest};
+use App\Http\Requests\Api\Front\Cart\{AddToCartRequest, RemoveFromCartRequest, UpdateCartQuantityRequest};
 
 class CartController extends Controller
 {
@@ -30,11 +30,18 @@ class CartController extends Controller
     }
     public function removeFromCart(RemoveFromCartRequest $request)
     {
+
         $cart_id = $request->cart_id;
         if (!$cart_id) {
             return $this->responseApi('Invalid cart id');
         }
         $this->cartService->removeFromCart($cart_id);
         return $this->responseApi('Product removed from cart successfully');
+    }
+    public function updateCartQuantity(UpdateCartQuantityRequest $request)
+    {
+
+        $data = $this->cartService->updateCartQuantity($request);
+        return $this->responseApi("quantity " . $request->action . " is succuss", $data);
     }
 }
