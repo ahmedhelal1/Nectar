@@ -19,4 +19,13 @@ class CartService
         $cart->save();
         return $cart;
     }
+    public function removeFromCart($id)
+    {
+        $cart = Cart::find($id);
+        if ($cart) {
+            $cart->delete();
+            return true;
+        }
+        return false;
+    }
 }

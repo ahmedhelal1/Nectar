@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Front\CartService;
 use App\Transformers\Api\Front\Cart\CartTransformer;
 use League\Fractal\Resource\Collection;
-use App\Http\Requests\Api\Front\Cart\AddToCartRequest;
+use App\Http\Requests\Api\Front\Cart\{AddToCartRequest, RemoveFromCartRequest};
 
 class CartController extends Controller
 {
@@ -27,5 +27,14 @@ class CartController extends Controller
         $cart = $this->cartService->addToCart($product_id, $user);
         $data = fractal()->item($cart)->transformWith(new CartTransformer)->toArray();
         return $this->responseApi('Product added to cart successfully', $data, 201);
+    }
+    public function removeFromCart(RemoveFromCartRequest $request)
+    {
+        $cart_id = $request->cart_id;
+        if (!$cart_id) {
+            return $this->responseApi('Invalid cart id');
+        }
+        $this->cartService->removeFromCart($cart_id);
+        return $this->responseApi('Product removed from cart successfully');
     }
 }
