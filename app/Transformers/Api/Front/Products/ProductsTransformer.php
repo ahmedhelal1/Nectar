@@ -10,6 +10,7 @@ class ProductsTransformer extends TransformerAbstract
     public function transform(Products $products)
     {
         return [
+            'id' => (int) $products->id,
             'name' => $products->name,
             'image' => $products->image,
             'description' => $products->description,

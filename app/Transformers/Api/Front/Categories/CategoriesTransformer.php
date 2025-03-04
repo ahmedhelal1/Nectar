@@ -10,6 +10,7 @@ class CategoriesTransformer extends TransformerAbstract
     public function transform(Categories $categories)
     {
         return [
+            'id' => (int) $categories->id,
             'name' => $categories->name,
             'image' => $categories->image,
         ];

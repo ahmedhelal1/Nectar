@@ -6,7 +6,7 @@ use App\Models\{Addresses, Cities, Governorates, User, Categories, Products};
 
 class CategoryService
 {
-    public function getCategories()
+    public function index()
     {
         $categories = Categories::all();
         return $categories;

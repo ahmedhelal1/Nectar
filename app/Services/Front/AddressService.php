@@ -11,18 +11,18 @@ class AddressService
         $governorates = Governorates::all();
         return $governorates;
     }
-    public function getCitiesByGovernorate_Id($governorate_id)
+    public function getCities($governorate_id)
     {
         $cities = Cities::where('governorate_id', $governorate_id)->get();
         return $cities;
     }
 
-    public function getAddressesByUserId($userId)
+    public function getAddress($userId)
     {
         $cities = Addresses::where('user_id', $userId)->get();
         return $cities;
     }
-    public function createAddress($data)
+    public function store($data)
     {
         $address = Addresses::create($data);
         return $address;

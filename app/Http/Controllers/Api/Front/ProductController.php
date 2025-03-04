@@ -25,7 +25,7 @@ class ProductController extends Controller
     public function store(CreateProductRequest $request)
     {
         $data = $request->validated();
-        $product = $this->Product_service->createProduct($data);
+        $product = $this->Product_service->store($data);
         return $this->responseApi('Product created successfully', $product, 201);
     }
     public function getProduct(Request $request)

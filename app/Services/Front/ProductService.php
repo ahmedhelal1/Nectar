@@ -14,7 +14,7 @@ class ProductService
         $product = Products::where('category_id', $category_id)->get();
         return $product;
     }
-    public function createProduct(array $data)
+    public function store(array $data)
     {
         $product = Products::create([
             'name' => $data['name'],

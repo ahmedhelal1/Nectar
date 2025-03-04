@@ -29,30 +29,31 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('register', 'register')->name('register');
     Route::post('login', 'login')->name('login');
     Route::post('/logout', 'logout')->name('logout')->middleware('auth:sanctum');
-    Route::Post('sendCode', 'sendOtpCode')->name('sendCode');
+    Route::Post('send-code', 'sendOtpCode')->name('send-code');
     Route::Post('verify', 'verifyOtpCode')->name('verify');
-    Route::post('forgetPassword', 'forgetPassword')->name('forgetPassword');
-    Route::post('resetPassword', 'resetPassword')->name('resetPassword');
+    Route::post('forget-password', 'forgetPassword')->name('forget-password');
+    Route::post('reset-password', 'resetPassword')->name('reset-password');
 });
 
 Route::prefix('address')->controller(AddressController::class)->group(
     function () {
-        Route::get('getGovernorates', 'getGovernorates');
-        Route::get('getCities', 'getCities');
-        Route::get('getAddress', 'getAddress')->middleware('auth:sanctum');
-        Route::Post('createAddress', 'store')->middleware('auth:sanctum');
+        Route::get('governorates', 'getGovernorates')->name('governorates');
+        Route::get('cities', 'getCities')->name('cities');
+        Route::get('address', 'getAddress')->middleware('auth:sanctum');
+        Route::Post('create-address', 'store')->middleware('auth:sanctum');
     }
 );
-Route::get('getCategory', [CategoryController::class, 'index']);
-Route::get('indexProduct', [ProductController::class, 'index']);
-Route::get('getProduct/{id}', [ProductController::class, 'getProduct']);
-Route::post('createProduct', [ProductController::class, 'store'])->middleware('auth:sanctum');;
+
+Route::get('get-category', [CategoryController::class, 'index']);
+Route::get('index_product', [ProductController::class, 'index']);
+Route::get('get-product/{id}', [ProductController::class, 'getProduct']);
+Route::post('create-product', [ProductController::class, 'store'])->middleware('auth:sanctum');;
 Route::prefix('cart')->middleware('auth:sanctum')->controller(CartController::class)->group(
     function () {
-        Route::get('getCart', 'getCart')->name('getCart');
-        Route::post('addToCart', 'addToCart')->name('addToCart');
-        Route::delete('removeFromCart', 'removeFromCart')->name('removeFromCart');
-        Route::post('updateCart', 'updateCartQuantity')->name('updateCart');
+        Route::get('get-cart', 'getCart')->name('get-cart');
+        Route::post('add-to-cart', 'addToCart')->name('add-to-cart');
+        Route::delete('remove-from-cart', 'removeFromCart')->name('remove-from-cart');
+        Route::post('update-cart', 'updateCartQuantity')->name('update-cart');
 
         // Route::post('applyCoupon', 'applyCoupon');
         // Route::post('checkout', 'checkout');

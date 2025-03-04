@@ -13,7 +13,7 @@ class CategoryController extends Controller
     public function __construct(private CategoryService $category_Service) {}
     public function index()
     {
-        $category = $this->category_Service->getCategories();
+        $category = $this->category_Service->index();
         $data = fractal()->collection($category)->transformWith(new CategoriesTransformer)->toArray();
         return $this->responseApi($data, 200);
     }

@@ -11,6 +11,7 @@ class GovernmentTransformer extends TransformerAbstract
     public function transform(Governorates $governorates)
     {
         return [
+            'id' => (int) $governorates->id,
             'name' => $governorates->name,
         ];
     }
