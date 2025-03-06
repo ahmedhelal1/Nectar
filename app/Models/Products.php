@@ -28,6 +28,14 @@ class Products extends Model implements HasMedia
     }
     public function cart()
     {
-        return $this->hasMany(cart::class);
+        return $this->belongsToMany(
+            Cart::class,
+            'cart_product',
+            'product_id',
+            'cart_id'
+        )
+            ->withPivot(
+                'quantity'
+            );
     }
 }
