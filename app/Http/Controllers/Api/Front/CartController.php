@@ -8,25 +8,28 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Front\CartService;
 use App\Transformers\Api\Front\Cart\CartTransformer;
 use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\item;
 use App\Http\Requests\Api\Front\Cart\{AddToCartRequest, RemoveFromCartRequest, UpdateCartQuantityRequest};
+use App\Models\Cart;
 
 class CartController extends Controller
 {
     public function __construct(private CartService $cartService) {}
     public function getCart()
     {
-        $user = Auth::user()->id;
-        $cart = $this->cartService->getCart($user);
-        $data = fractal()->collection($cart)->transformWith(new CartTransformer)->toArray();
-        return $this->responseApi($data);
+        $cart = $this->cartService->getCart();
+        if (!$cart) {
+            return $this->responseApi(['message' => 'Cart not found']);
+        }
+        $transformedCart  = fractal()->item($cart, new CartTransformer())->toArray();
+        return $this->responseApi('Cart retrieved successfully', $transformedCart['data']);
     }
     public function addToCart(AddToCartRequest $request)
     {
         $product_id = $request->product_id;
-        $user = Auth::user()->id;
-        $cart = $this->cartService->addToCart($product_id, $user);
-        $data = fractal()->item($cart)->transformWith(new CartTransformer)->toArray();
-        return $this->responseApi('Product added to cart successfully', $data, 201);
+        $quantity = $request->quantity;
+        $cart = $this->cartService->addToCart($product_id, $quantity);
+        return $this->responseApi('Product added to cart successfully', $cart, 201);
     }
     public function removeFromCart(RemoveFromCartRequest $request)
     {

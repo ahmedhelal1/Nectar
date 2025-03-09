@@ -5,19 +5,39 @@ namespace App\Services\Front;
 
 use App\Models\{Products, Cart, User};
 
+
 class CartService
 {
-    public function getCart($id)
+    public function getCart()
     {
-        $cart = Cart::where('user_id', $id)->get();
+        $cart = Cart::where('user_id', auth()->id())->with('products')->first();
         return $cart;
     }
-    public function addToCart($product_id, $user_id)
+
+
+    public function addToCart($product_id, $quantity)
     {
-        $cart = Cart::firstOrCreate(['product_id' => $product_id, 'user_id' => $user_id]);
-        $cart->quantity++;
-        $cart->save();
-        return $cart;
+        $cart = Cart::where('user_id', auth()->user()->id)->first();
+        if (!$cart) {
+            $cart = Cart::create(['user_id' =>  auth()->user()->id]);
+        }
+
+
+        $product = Products::find($product_id);
+
+        if (!$product) {
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+
+        $isExistingProduct = $cart->products()->where('product_id', $product_id)->first();
+        if ($isExistingProduct) {
+
+            $cart->products()->updateExistingPivot($product->id, [
+                'quantity' => $isExistingProduct->pivot->quantity + $quantity
+            ]);
+        } else {
+            $cart->products()->syncWithoutDetaching([$product->id => ['quantity' => $quantity]]);
+        }
     }
     public function removeFromCart($id)
     {
